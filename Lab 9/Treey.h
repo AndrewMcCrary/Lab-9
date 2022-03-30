@@ -5,25 +5,26 @@ template <typename T>
 class Treey
 {
 private:
-	Nodey<T>* root;
-	void insertRecur(T val, Nodey<T>* curr);
-	int numNodesRecur(Nodey<T>* curr);
+	Nodey<T>* root = nullptr;
 
 public:
+    Treey();
 	Treey(T root);
 	~Treey();
-	void insert(T var);
+	void insert(T val, Nodey<T>* curr = nullptr);
 	T remove(T var);
 	Nodey<T>* find(T key, Nodey<T>* curr);
 	int numNodes(Nodey<T>* curr);
-	// getAllAscending
-	// getAllDescending
+	void getAllAscending(Nodey<T>* curr, Nodey<T>* tempArr[]);
+	void getAllDescending(Nodey<T>* curr, Nodey<T>* tempArr[]);
 	void emptyTree();
-	int height(Nodey<T>* curr);
-	void rotateLeft();
-	void rotateRight();
-
+	int height(Nodey<T>* curr, Nodey<T>* parent);
 };
+
+template<typename T>
+inline Treey<T>::Treey()
+{
+}
 
 template<typename T>
 inline Treey<T>::Treey(T root)
@@ -39,36 +40,7 @@ inline Treey<T>::~Treey()
 }
 
 template<typename T>
-inline void Treey<T>::insert(T var)
-{
-	if (root == nullptr){
-		Nodey* newRooty = new Node(var);
-		root = newRooty;
-	}
-	if (find(var, root) != nullptr) {
-		throw "Already exists"
-	}
-	Node* curr = root;
-	while ((curr->left != nullptr && curr->data > var) ||
-		(curr->right != nullptr && curr->data < var)) {
-		if (curr->data < var) {
-			curr = curr->right;
-		}
-		else {
-			curr = curr->left;
-		}
-	}
-	if (curr->data < val) {
-		curr->right = new Node(val);
-	}
-	else {
-		curr->left = new Node(val);
-	}
-	// rebalance
-}
-
-template<typename T>
-inline void Treey<T>::insertRecur(T val, Nodey<T>* curr)
+inline void Treey<T>::insert(T val, Nodey<T>* curr)
 {
 	if (!this->root)
 		return this->root = new Nodey<T>(val);
@@ -152,14 +124,36 @@ inline int Treey<T>::numNodes(Nodey<T>* curr)
 	if (!curr)
 		return 0;
 
-	if (curr->left && curr->right)
-		return 1 + numNodesRecur(curr->left) + numNodesRecur(curr->right);
-	else if (curr->left)
-		return 1 + numNodesRecur(curr->left);
-	else if (curr->right)
-		return 1 + numNodesRecur(curr->right);
-	else
-		return 1;
+    return 1 + numNodes(curr->left) + numNodes(curr->right);
+}
+
+template<typename T>
+inline void Treey<T>::getAllAscending(Nodey<T>* curr, Nodey<T>* tempArr[])
+{
+    static int index = 0; 
+	if(curr == null){
+       return;
+    }
+    getAllAscending(curr->left, index);   
+    tempArr[index++] = curr->getData();  
+    getAllAscending(curr->right, index);
+}
+
+// to call:
+// int numberNodes = OurTree->numNodes(root);
+// Nodey<T> *GAA = new Nodey<T>*[numberNodes];
+// OurTree->getAllAscending(root, GAA);
+
+template<typename T>
+inline void Treey<T>::getAllDescending(Nodey<T>* curr, Nodey<T>* tempArr[])
+{
+	static int index = 0; 
+	if(curr == null){
+       return;
+    }
+    getAllDescending(curr->right, index);   
+    tempArr[index++] = curr->getData();  
+    getAllDescending(curr->left, index);
 }
 
 template<typename T>
@@ -170,16 +164,92 @@ inline void Treey<T>::emptyTree()
 }
 
 template<typename T>
-inline int Treey<T>::height(Nodey<T>* curr)
+inline int Treey<T>::height(Nodey<T>* curr, Nodey<T>* parent)
 {
-	if (curr == nullptr)
-		return 0;
+	int R, L;
 
-	int r, l;
-	r = height(curr->right) + 1;
-	l = height(curr->left) + 1;
-	if (r > l)
-		return r;
-	else
-		return l;
+	if (curr == nullptr) return 0;
+	R = this->height(curr->right, curr) + 1;
+	L = this->height(curr->left, curr) + 1;
+	
+	if (R - L > 1) {
+		int CR = this->height(curr->right->right, curr);
+		int CL = this->height(curr->right->left, curr);
+
+		if (CL > CR)
+			
+	}
+    if (R > L) return R;
+    return L;
 }
+
+/*
+int Height(node* curr, node* parent) {
+        int R, L;
+        if (curr == NULL) return 0;
+        R = Height(curr->right, curr) + 1;
+        L = Height(curr->left, curr) + 1;
+                                                        //if (R > L) return R;
+                                                        //return L;
+        if (R - L > 1) {
+            int CR = Height(curr->right->right, curr);
+            int CL = Height(curr->right->left, curr);
+            if (CL > CR) {
+                RotateRL(parent, curr, curr->right->left);
+            } else {
+                RotateLeft(parent, curr, curr->right);
+            }
+        }
+    }
+
+    void RotateRL(node* gp, node* parent, node* pivot){
+        node* temp = parent->right
+        parent->right = pivot->left
+        temp->left = pivot->right
+        pivot->left = parent;
+        pivot->right = temp;
+        if (gp == NULL) head = pivot;
+        else if (gp->data < parent->data) gp->right = pivot;
+        else gp->left = pivot;
+    }
+
+    void RotateLR(node* gp, node* parent, node* pivot){
+        node* temp = parent->left
+        parent->left = pivot->right
+        temp->right = pivot->left
+        pivot->right = parent;
+        pivot->left = temp;
+        if (gp == NULL) head = pivot;
+        else if (gp->data < parent->data) gp->right = pivot;
+        else gp->left = pivot;
+    }
+
+    void RotateLeft(node parent, node nR, node nL) {
+        if (parent == root) {
+            node temp = head->right;
+            temp->left = root;
+            root->right = NULL;
+            root = temp;
+        } else {
+            parent->right = nR;
+            nL->right = nR->left;
+            nR->left = nL;
+        }
+    }
+
+	void RotateRight(node *grandparent, node* pivot) {
+        if (grandparent->data > pivot->data) {
+            node *temp = grandparent->left;
+            grandparent->left = pivot;
+            temp->left = pivot->right;
+        } else {
+            node *temp = grandparent->right;
+            grandparent->right = pivot;
+            temp->left = pivot ->right;
+            pivot->right = tmep;
+        }
+    }
+
+
+
+*/
