@@ -14,7 +14,7 @@ public:
 	/// <param name="data">The data for the node.</param>
 	/// <param name="right">The left child.</param>
 	/// <param name="left">The right child.</param>
-	Nodey<T1, T2>(T1 key, T2 data = (T2)NULL, Nodey<T1, T2>* right = nullptr, Nodey<T1, T2>* left = nullptr, Nodey<T1, T2>* parent = nullptr);
+	Nodey<T1, T2>(T1 key, T2 data = (T2)NULL, Nodey<T1, T2>* right = nullptr, Nodey<T1, T2>* left = nullptr);
 
 	/// <summary>
 	/// The right child.
@@ -29,7 +29,7 @@ public:
 	/// <summary>
 	/// The balance factor.
 	/// </summary>
-	int balanceFactor;
+	int balanceFactor = 0;
 
 	/// <summary>
 	/// Gets the nodes lookup key.
@@ -60,11 +60,6 @@ public:
 	/// </summary>
 	void destroyWithChildren();
 
-	//void rotateLeft(Nodey<T>* parent, Nodey<T>* nR, Nodey<T>* nL, Nodey<T>* root);
-	//void rotateRight(Nodey<T>* grandparent, Nodey<T>* pivot);
-	//void rotateLR(Nodey<T>* gp, Nodey<T>* parent, Nodey<T>* pivot);
-	//void rotateRL(Nodey<T>* gp, Nodey<T>* parent, Nodey<T>* pivot);
-
 	bool operator>(Nodey* temp);
 	bool operator<(Nodey* temp);
 	bool operator==(Nodey* temp);
@@ -72,13 +67,12 @@ public:
 
 
 template<class T1, class T2>
-inline Nodey<T1, T2>::Nodey(T1 key, T2 data, Nodey<T1, T2>* right, Nodey<T1, T2>* left, Nodey<T1, T2>* parent)
+inline Nodey<T1, T2>::Nodey(T1 key, T2 data, Nodey<T1, T2>* right, Nodey<T1, T2>* left)
 {
 	this->key = key;
 	this->data = data;
 	this->right = right;
 	this->left = left;
-	this->parent = parent;
 }
 
 template<class T1, class T2>
@@ -92,64 +86,6 @@ inline void Nodey<T1, T2>::destroyWithChildren()
 
 	delete this;
 }
-
-//template<typename T>
-//inline void Nodey<T>::rotateLeft(Nodey<T>* parent, Nodey<T>* nR, Nodey<T>* nL, Nodey<T>* root)
-//{
-//	if (parent == root) {
-//		Nodey<T>* temp = head->right;
-//		temp->left = root;
-//		root->right = NULL;
-//		root = temp;
-//	}
-//	else {
-//		parent->right = nR;
-//		nL->right = nR->left;
-//		nR->left = nL;
-//	}
-//}
-
-//template<typename T>
-//inline void Nodey<T>::rotateRight(Nodey<T>* grandparent, Nodey<T>* pivot)
-//{
-//	if (grandparent->data > pivot->data) {
-//		Nodey<T>* temp = grandparent->left;
-//		grandparent->left = pivot;
-//		temp->left = pivot->right;
-//	}
-//	else {
-//		Nodey<T>* temp = grandparent->right;
-//		grandparent->right = pivot;
-//		temp->left = pivot->right;
-//		pivot->right = temp;
-//	}
-//}
-//
-//template<typename T>
-//inline void Nodey<T>::rotateLR(Nodey<T>* gp, Nodey<T>* parent, Nodey<T>* pivot)
-//{
-//	node* temp = parent->left
-//	parent->left = pivot->right
-//	temp->right = pivot->left
-//	pivot->right = parent;
-//	pivot->left = temp;
-//	if (gp == NULL) head = pivot;
-//	else if (gp->data < parent->data) gp->right = pivot;
-//	else gp->left = pivot;
-//}
-//
-//template<typename T>
-//inline void Nodey<T>::rotateRL(Nodey<T>* gp, Nodey<T>* parent, Nodey<T>* pivot)
-//{
-//	node* temp = parent->right
-//	parent->right = pivot->left
-//	temp->left = pivot->right
-//	pivot->left = parent;
-//	pivot->right = temp;
-//	if (gp == NULL) head = pivot;
-//	else if (gp->data < parent->data) gp->right = pivot;
-//	else gp->left = pivot;
-//}
 
 template<class T1, class T2>
 inline bool Nodey<T1, T2>::operator>(Nodey* temp)

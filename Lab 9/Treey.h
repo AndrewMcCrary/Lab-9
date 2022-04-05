@@ -10,8 +10,9 @@ private:
     Nodey<T1, T2>* minValueKey(Nodey<T1, T2>* root);
 
     int avlHeight(Nodey<T1, T2>* root);
-    void balanceTree();
-    Nodey<T1, T2>* findImbalancedRoot();
+    bool balanceTree(Nodey<T1, T2>* root, Nodey<T1, T2>* p);
+    std::tuple<Nodey<T1, T2>*, Nodey<T1, T2>*> findImbalancedRoot(Nodey<T1, T2>* root, Nodey<T1, T2>* parent);
+    void updateBalanceFactors(Nodey<T1, T2>* root);
 
     /// <summary>
     /// Rotates to the left.
@@ -140,7 +141,7 @@ inline void Treey<T1, T2>::insert(T1 key, T2 data)
             if (current->left)
                 current = current->left;
             else {
-                current->left = new Nodey<T1, T2>(key, data, nullptr, nullptr, current);
+                current->left = new Nodey<T1, T2>(key, data, nullptr, nullptr);
                 break;
             }
         }
@@ -148,13 +149,14 @@ inline void Treey<T1, T2>::insert(T1 key, T2 data)
             if (current->right)
                 current = current->right;
             else {
-                current->right = new Nodey<T1, T2>(key, data, nullptr, nullptr, current);
+                current->right = new Nodey<T1, T2>(key, data, nullptr, nullptr);
                 break;
             }
         }
     }
 
-    // TODO: Rebalance here
+    this->updateBalanceFactors(this->root);
+    this->balanceTree(this->root, nullptr);
 }
 
 template<class T1, class T2>
@@ -321,29 +323,44 @@ inline int Treey<T1, T2>::avlHeight(Nodey<T1, T2>* root)
     int h = 0;
     if (root) {
         int l = avlHeight(root->left), r = avlHeight(root->right);
-        h = max(l, r) + 1;
+        h = std::max(l, r) + 1;
     }
     return h;
 }
 
 template<class T1, class T2>
-inline void Treey<T1, T2>::balanceTree() {
+inline bool Treey<T1, T2>::balanceTree(Nodey<T1, T2>* root, Nodey<T1, T2>* p) {
+    if (!root)
+        return false;
 
+    if (abs(root->balanceFactor) >= 2) {
+        // rebalance cases
+        if (root->balanceFactor < 0 && root->right->balanceFactor < 0)
+            this->rotateLeft(root->right, root, p);
+        else if (root->balanceFactor > 0 && root->left->balanceFactor > 0)
+            this->rotateRight(root->left, root, p);
+        else if (root->balanceFactor < 0 && root->right->balanceFactor > 0)
+            this->rotateRL(root->right->left, root->right, root, p);
+        else if (root->balanceFactor > 0 && root->left->balanceFactor < 0)
+            this->rotateLR(root->left->right, root->left, root, p);
 
-
-
-
-
+        return true;
+    }
+    else {
+        return balanceTree(root->left, root) || balanceTree(root->right, root);
+    }
 }
 
 template<class T1, class T2>
-inline Nodey<T1, T2>* Treey<T1, T2>::findImbalancedRoot() {
-    
+inline void Treey<T1, T2>::updateBalanceFactors(Nodey<T1, T2>* root) {
+    if (!root)
+        return;
+    root->balanceFactor = this->avlHeight(root->left) - this->avlHeight(root->right);
+    this->updateBalanceFactors(root->left);
+    this->updateBalanceFactors(root->right);
 }
 
 #pragma endregion
-
-
 
 #pragma region Rotations
 
@@ -378,7 +395,7 @@ inline void Treey<T1, T2>::rotateRight(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, N
 template<class T1, class T2>
 inline void Treey<T1, T2>::rotateLR(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp, Nodey<T1, T2>* ggp) {
     this->rotateLeft(pivot, p, gp);
-    this->rotateRight(pivot, gp, ggp)
+    this->rotateRight(pivot, gp, ggp);
 }
 
 template<class T1, class T2>

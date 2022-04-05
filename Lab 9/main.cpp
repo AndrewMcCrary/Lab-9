@@ -58,8 +58,16 @@ int fmain(void) {
 int main(void) {
 	Treey<int, int> tree = Treey<int, int>();
 	tree.insert(1, 5);
+	tree.insert(2, 1);
+	tree.insert(3, 1);
 	tree.insert(4, 5);
-	tree.insert(3, 5);
+	tree.insert(5, 5);
+	tree.insert(6, 5);
+	tree.insert(7, 5);
+	tree.insert(8, 5);
+	tree.insert(9, 5);
+	tree.insert(10, 5);
+	tree.insert(11, 5);
 
 	system("pause");
 	return 0;
