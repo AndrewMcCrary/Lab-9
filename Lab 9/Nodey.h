@@ -27,6 +27,11 @@ public:
 	Nodey<T1, T2>* left;
 
 	/// <summary>
+	/// The balance factor.
+	/// </summary>
+	int balanceFactor;
+
+	/// <summary>
 	/// Gets the nodes lookup key.
 	/// </summary>
 	/// <returns>The lookup key.</returns>

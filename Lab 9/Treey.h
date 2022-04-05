@@ -10,6 +10,8 @@ private:
     Nodey<T1, T2>* minValueKey(Nodey<T1, T2>* root);
 
     int avlHeight(Nodey<T1, T2>* root);
+    void balanceTree();
+    Nodey<T1, T2>* findImbalancedRoot();
 
     /// <summary>
     /// Rotates to the left.
@@ -99,19 +101,18 @@ public:
 	int height(Nodey<T1, T2>* root);
 };
 
+#pragma region Constructors
 
 template<class T1, class T2>
 inline Treey<T1, T2>::Treey()
 {
 }
 
-
 template<class T1, class T2>
 inline Treey<T1, T2>::Treey(T1 rootKey, T2 rootData)
 {
     this->root = new Nodey<T1, T2>(rootKey, rootData);
 }
-
 
 template<class T1, class T2>
 inline Treey<T1, T2>::~Treey()
@@ -120,6 +121,7 @@ inline Treey<T1, T2>::~Treey()
 		this->root->destroyWithChildren();
 }
 
+#pragma endregion
 
 template<class T1, class T2>
 inline void Treey<T1, T2>::insert(T1 key, T2 data)
@@ -154,10 +156,6 @@ inline void Treey<T1, T2>::insert(T1 key, T2 data)
 
     // TODO: Rebalance here
 }
-
-
-
-
 
 template<class T1, class T2>
 inline T2 Treey<T1, T2>::remove(T1 key, Nodey<T1, T2>* root, Nodey<T1, T2>* parent)
@@ -225,16 +223,6 @@ inline Nodey<T1, T2>* Treey<T1, T2>::minValueKey(Nodey<T1, T2>* root)
 }
 
 
-template<class T1, class T2>
-inline int Treey<T1, T2>::avlHeight(Nodey<T1, T2>* root)
-{
-    int h = 0;
-    if (root) {
-        int l = avlHeight(root->left), r = avlHeight(root->right);
-        h = max(l, r) + 1;
-    }
-    return h;
-}
 
 
 template<class T1, class T2>
@@ -325,6 +313,39 @@ inline int Treey<T1, T2>::height(Nodey<T1, T2>* root)
     return l > r ? l + 1 : r + 1;
 }
 
+#pragma region Balancing
+
+template<class T1, class T2>
+inline int Treey<T1, T2>::avlHeight(Nodey<T1, T2>* root)
+{
+    int h = 0;
+    if (root) {
+        int l = avlHeight(root->left), r = avlHeight(root->right);
+        h = max(l, r) + 1;
+    }
+    return h;
+}
+
+template<class T1, class T2>
+inline void Treey<T1, T2>::balanceTree() {
+
+
+
+
+
+
+}
+
+template<class T1, class T2>
+inline Nodey<T1, T2>* Treey<T1, T2>::findImbalancedRoot() {
+    
+}
+
+#pragma endregion
+
+
+
+#pragma region Rotations
 
 template<class T1, class T2>
 inline void Treey<T1, T2>::rotateLeft(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp) { // Child (pivot) rotates up and left
@@ -335,7 +356,6 @@ inline void Treey<T1, T2>::rotateLeft(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, No
         gp->right = pivot;
     else
         this->root = pivot;
-
 
     p->right = pivot->left;
     pivot->left = p;
@@ -350,7 +370,6 @@ inline void Treey<T1, T2>::rotateRight(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, N
         gp->right = pivot;
     else
         this->root = pivot;
-
 
     p->left = pivot->right;
     pivot->right = p;
@@ -367,3 +386,5 @@ inline void Treey<T1, T2>::rotateRL(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Node
     this->rotateRight(pivot, p, gp);
     this->rotateLeft(pivot, gp, ggp);
 }
+
+#pragma endregion
