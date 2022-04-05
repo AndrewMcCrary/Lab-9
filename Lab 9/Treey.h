@@ -11,6 +11,40 @@ private:
 
     int avlHeight(Nodey<T1, T2>* root);
 
+    /// <summary>
+    /// Rotates to the left.
+    /// </summary>
+    /// <param name="pivot">The pivot node.</param>
+    /// <param name="p">Parent of the pivot.</param>
+    /// <param name="gp">Grandparent, nullable.</param>
+    void rotateLeft(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp);
+
+    /// <summary>
+    /// Rotates to the right.
+    /// </summary>
+    /// <param name="pivot">The pivot node.</param>
+    /// <param name="p">Parent of the pivot.</param>
+    /// <param name="gp">Grandparent, nullable.</param>
+    void rotateRight(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp);
+
+    /// <summary>
+    /// Rotates to the left then the right.
+    /// </summary>
+    /// <param name="pivot">The pivot node.</param>
+    /// <param name="p">Parent of the pivot.</param>
+    /// <param name="gp">Grandparent of the pivot, not null.</param>
+    /// <param name="ggp">Great grandparent of the pivot, null.</param>
+    void rotateLR(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp, Nodey<T1, T2>* ggp);
+
+    /// <summary>
+    /// Rotates to the right then the left.
+    /// </summary>
+    /// <param name="pivot">The pivot node.</param>
+    /// <param name="p">Parent of the pivot.</param>
+    /// <param name="gp">Grandparent of the pivot, not null.</param>
+    /// <param name="ggp">Great grandparent of the pivot, null.</param>
+    void rotateRL(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp, Nodey<T1, T2>* ggp);
+
 public:
     /// <summary>
     /// Empty constructor.
@@ -30,7 +64,7 @@ public:
 	/// </summary>
 	/// <param name="key">The node's key.</param>
 	/// <param name="data">The node's data.</param>
-	void insert(T1 key, T2 data, Nodey<T1, T2>* root = nullptr);
+	void insert(T1 key, T2 data);
 
 	/// <summary>
 	/// Removes a node with the specified key and returns it's data.
@@ -88,29 +122,41 @@ inline Treey<T1, T2>::~Treey()
 
 
 template<class T1, class T2>
-inline void Treey<T1, T2>::insert(T1 key, T2 data, Nodey<T1, T2>* root)
+inline void Treey<T1, T2>::insert(T1 key, T2 data)
 {
-	if (!this->root)
-		return this->root = new Nodey<T1, T2>(key);
+    Nodey<T1, T2>* current = this->root;
+    if (!current) {
+        this->root = new Nodey<T1, T2>(key);
+        return;
+    }
 
-	if (root->getKey() == key)
-		throw "Duplicate key error";
-
-	if (key < root->getKey()) {
-		if (root->left)
-			return this->insert(key, data, root->left);
-		else
-            root->left = new Nodey<T1, T2>(key, data, nullptr, nullptr, root);
-	}
-	else {
-		if (root->right)
-			return this->insert(key, data, root->right);
-		else 
-            root->right = new Nodey<T1, T2>(key, nullptr, nullptr, root);
-	}
+    while (1) {
+        if (current->getKey() == key)
+            throw "Duplicate key error";
+        
+        if (key < current->getKey()) {
+            if (current->left)
+                current = current->left;
+            else {
+                current->left = new Nodey<T1, T2>(key, data, nullptr, nullptr, current);
+                break;
+            }
+        }
+        else {
+            if (current->right)
+                current = current->right;
+            else {
+                current->right = new Nodey<T1, T2>(key, data, nullptr, nullptr, current);
+                break;
+            }
+        }
+    }
 
     // TODO: Rebalance here
 }
+
+
+
 
 
 template<class T1, class T2>
@@ -147,7 +193,7 @@ inline T2 Treey<T1, T2>::remove(T1 key, Nodey<T1, T2>* root, Nodey<T1, T2>* pare
             root->key = min->getKey();
             root->data = min->getData();
             delete min;
-            min->parent->left = min->right
+            min->parent->left = min->right;
         }
 
         // TODO: Rebalance here
@@ -185,11 +231,10 @@ inline int Treey<T1, T2>::avlHeight(Nodey<T1, T2>* root)
     int h = 0;
     if (root) {
         int l = avlHeight(root->left), r = avlHeight(root->right);
-        int h = max(l, r) + 1;
+        h = max(l, r) + 1;
     }
     return h;
 }
-
 
 
 template<class T1, class T2>
@@ -230,7 +275,7 @@ template<class T1, class T2>
 inline void Treey<T1, T2>::getAllAscending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[])
 {
     static int index = 0; 
-	if(curr == null){
+	if(curr == NULL){
        return;
     }
     getAllAscending(curr->left, index);   
@@ -249,7 +294,7 @@ template<class T1, class T2>
 inline void Treey<T1, T2>::getAllDescending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[])
 {
 	static int index = 0; 
-	if(curr == null){
+	if(curr == NULL){
        return;
     }
     getAllDescending(curr->right, index);   
@@ -281,74 +326,44 @@ inline int Treey<T1, T2>::height(Nodey<T1, T2>* root)
 }
 
 
-
-/*
-int Height(node* curr, node* parent) {
-        int R, L;
-        if (curr == NULL) return 0;
-        R = Height(curr->right, curr) + 1;
-        L = Height(curr->left, curr) + 1;
-                                                        //if (R > L) return R;
-                                                        //return L;
-        if (R - L > 1) {
-            int CR = Height(curr->right->right, curr);
-            int CL = Height(curr->right->left, curr);
-            if (CL > CR) {
-                RotateRL(parent, curr, curr->right->left);
-            } else {
-                RotateLeft(parent, curr, curr->right);
-            }
-        }
-    }
-
-    void RotateRL(node* gp, node* parent, node* pivot){
-        node* temp = parent->right
-        parent->right = pivot->left
-        temp->left = pivot->right
-        pivot->left = parent;
-        pivot->right = temp;
-        if (gp == NULL) head = pivot;
-        else if (gp->data < parent->data) gp->right = pivot;
-        else gp->left = pivot;
-    }
-
-    void RotateLR(node* gp, node* parent, node* pivot){
-        node* temp = parent->left
-        parent->left = pivot->right
-        temp->right = pivot->left
-        pivot->right = parent;
-        pivot->left = temp;
-        if (gp == NULL) head = pivot;
-        else if (gp->data < parent->data) gp->right = pivot;
-        else gp->left = pivot;
-    }
-
-    void RotateLeft(node parent, node nR, node nL) {
-        if (parent == root) {
-            node temp = head->right;
-            temp->left = root;
-            root->right = NULL;
-            root = temp;
-        } else {
-            parent->right = nR;
-            nL->right = nR->left;
-            nR->left = nL;
-        }
-    }
-
-	void RotateRight(node *grandparent, node* pivot) {
-        if (grandparent->data > pivot->data) {
-            node *temp = grandparent->left;
-            grandparent->left = pivot;
-            temp->left = pivot->right;
-        } else {
-            node *temp = grandparent->right;
-            grandparent->right = pivot;
-            temp->left = pivot ->right;
-            pivot->right = tmep;
-        }
-    }
+template<class T1, class T2>
+inline void Treey<T1, T2>::rotateLeft(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp) { // Child (pivot) rotates up and left
+    // Grandparent points to pivot
+    if (gp && gp->getKey() > pivot->getKey())
+        gp->left = pivot;
+    else if (gp && gp->getKey() < pivot->getKey())
+        gp->right = pivot;
+    else
+        this->root = pivot;
 
 
+    p->right = pivot->left;
+    pivot->left = p;
+}
 
-*/
+template<class T1, class T2>
+inline void Treey<T1, T2>::rotateRight(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp) { // Left child of the root become new root from subtree perspective 
+        // Grandparent points to pivot
+    if (gp && gp->getKey() > pivot->getKey())
+        gp->left = pivot;
+    else if (gp && gp->getKey() < pivot->getKey())
+        gp->right = pivot;
+    else
+        this->root = pivot;
+
+
+    p->left = pivot->right;
+    pivot->right = p;
+}
+
+template<class T1, class T2>
+inline void Treey<T1, T2>::rotateLR(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp, Nodey<T1, T2>* ggp) {
+    this->rotateLeft(pivot, p, gp);
+    this->rotateRight(pivot, gp, ggp)
+}
+
+template<class T1, class T2>
+inline void Treey<T1, T2>::rotateRL(Nodey<T1, T2>* pivot, Nodey<T1, T2>* p, Nodey<T1, T2>* gp, Nodey<T1, T2>* ggp) {
+    this->rotateRight(pivot, p, gp);
+    this->rotateLeft(pivot, gp, ggp);
+}

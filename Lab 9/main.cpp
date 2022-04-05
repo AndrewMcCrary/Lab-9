@@ -13,7 +13,7 @@ struct Book {
 	int newLineCount;
 };
 
-int main(void) {	
+int fmain(void) {	
 	/*
 	Treey<tuple<string, int>> wordTree = Treey<tuple<string, int>>();
 
@@ -52,4 +52,15 @@ int main(void) {
 		wordFstrstr >> line;
 	}
 */
+	return 0;
+}
+
+int main(void) {
+	Treey<int, int> tree = Treey<int, int>();
+	tree.insert(1, 5);
+	tree.insert(4, 5);
+	tree.insert(3, 5);
+
+	system("pause");
+	return 0;
 }

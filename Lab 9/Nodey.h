@@ -27,11 +27,6 @@ public:
 	Nodey<T1, T2>* left;
 
 	/// <summary>
-	/// The parent.
-	/// </summary>
-	Nodey<T1, T2>* parent;
-
-	/// <summary>
 	/// Gets the nodes lookup key.
 	/// </summary>
 	/// <returns>The lookup key.</returns>
@@ -78,7 +73,7 @@ inline Nodey<T1, T2>::Nodey(T1 key, T2 data, Nodey<T1, T2>* right, Nodey<T1, T2>
 	this->data = data;
 	this->right = right;
 	this->left = left;
-	this->parent = parent
+	this->parent = parent;
 }
 
 template<class T1, class T2>
@@ -154,17 +149,17 @@ inline void Nodey<T1, T2>::destroyWithChildren()
 template<class T1, class T2>
 inline bool Nodey<T1, T2>::operator>(Nodey* temp)
 {
-	return this->freq > temp->freq;
+	return this->key > temp->key;
 }
 
 template<class T1, class T2>
 inline bool Nodey<T1, T2>::operator<(Nodey* temp)
 {
-	return this->freq < temp->freq;
+	return this->key < temp->key;
 }
 
 template<class T1, class T2>
 inline bool Nodey<T1, T2>::operator==(Nodey* temp)
 {
-	return this->freq == temp->freq;
+	return this->key == temp->key;
 }

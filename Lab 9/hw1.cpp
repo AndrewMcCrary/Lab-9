@@ -9,6 +9,7 @@
 /// 
 /// All contributions are equal.
 
+/*
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -132,4 +133,4 @@ int main(void) {
 
 	system("pause");
 	return 0;
-}
+}*/
