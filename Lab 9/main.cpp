@@ -14,13 +14,13 @@ struct Book {
 };
 
 int main(void) {	
-	
+	/*
 	Treey<tuple<string, int>> wordTree = Treey<tuple<string, int>>();
 
 	/*need to create the tree, nodes contain string and word count
 	read through the file
 	upon encountering new word, insert new node with word and count=1
-	upon encountering familiar word, increment familiar node's count*/
+	upon encountering familiar word, increment familiar node's count
 
 	string filename;
 	ifstream lineFstrstr;
@@ -51,5 +51,5 @@ int main(void) {
 
 		wordFstrstr >> line;
 	}
-
+*/
 }
