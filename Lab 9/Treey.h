@@ -11,7 +11,6 @@ private:
 
     int avlHeight(Nodey<T1, T2>* root);
     bool balanceTree(Nodey<T1, T2>* root, Nodey<T1, T2>* p);
-    std::tuple<Nodey<T1, T2>*, Nodey<T1, T2>*> findImbalancedRoot(Nodey<T1, T2>* root, Nodey<T1, T2>* parent);
     void updateBalanceFactors(Nodey<T1, T2>* root);
 
     /// <summary>
