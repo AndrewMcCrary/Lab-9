@@ -61,13 +61,17 @@ int main(void) {
 		else {
 			
 		}
-
-
-		//Nodey<string, int> tempy = Nodey<string, int>(word, 1);
-
 		strContents.push_back(word);
 		Fstrstr >> word;
 	}
+
+	int x = 3;
+	do
+	{
+		cout << "hi" << endl;
+		x--;
+
+	} while (x > 0);
 	
 
 	//wordFstrstr >> line;
