@@ -212,7 +212,6 @@ inline T2 Treey<T1, T2>::remove(T1 key, Nodey<T1, T2>* root, Nodey<T1, T2>* pare
     }
 }
 
-
 template<class T1, class T2>
 inline Nodey<T1, T2>* Treey<T1, T2>::minValueKey(Nodey<T1, T2>* root)
 {
@@ -223,28 +222,25 @@ inline Nodey<T1, T2>* Treey<T1, T2>::minValueKey(Nodey<T1, T2>* root)
     return root;
 }
 
-
-
-
 template<class T1, class T2>
 inline T2* Treey<T1, T2>::find(T1 key, Nodey<T1, T2>* root)
 {
     if (!root && this->root)
         return this->find(key, this->root);
     else
-        throw "The tree is empty";
+        return nullptr;
 
     if (root->getKey() == key)
         return root->getDataAddr();
 
     if (key < root->getKey()) {
         if (!root->left)
-            throw "The key does not exist";
+            return nullptr;
         return find(key, root->left);
     }
     else {
         if (!root->right)
-            throw "The key does not exist";
+            return nullptr;
         return find(key, root->right);
     }
 }
