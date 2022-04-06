@@ -80,7 +80,7 @@ public:
 	/// </summary>
 	/// <param name="key">The node's key.</param>
 	/// <returns>A pointer to the node's data.</returns>
-	T2* find(T1 key, Nodey<T1, T2>* root = nullptr);
+    T2* find(T1 key, Nodey<T1, T2>* root = nullptr);
 
 	/// <summary>
 	/// Returns the number of nodes.
@@ -88,7 +88,7 @@ public:
 	int numNodes(Nodey<T1, T2>* curr = nullptr);
 
 	void getAllAscending(T2* arr, int& i = 0, Nodey<T1, T2>* curr = nullptr);
-	void getAllDescending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[]);
+	void getAllDescending(T2* arr, int& i, Nodey<T1, T2>* curr);
 
 	/// <summary>
 	/// Deletes all nodes within the tree, starting at the root.
@@ -226,10 +226,11 @@ inline Nodey<T1, T2>* Treey<T1, T2>::minValueKey(Nodey<T1, T2>* root)
 template<class T1, class T2>
 inline T2* Treey<T1, T2>::find(T1 key, Nodey<T1, T2>* root)
 {
-    if (!root && this->root)
-        return this->find(key, this->root);
-    else
+    if (!this->root)
         return nullptr;
+
+    if (!root)
+        return this->find(key, this->root);
 
     if (root->getKey() == key)
         return root->getDataAddr();
@@ -292,15 +293,20 @@ inline void Treey<T1, T2>::getAllAscending(T2* arr, int& i, Nodey<T1, T2>* curr)
 
 
 template<class T1, class T2>
-inline void Treey<T1, T2>::getAllDescending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[])
+inline void Treey<T1, T2>::getAllDescending(T2* arr, int& i, Nodey<T1, T2>* curr)
 {
-	static int index = 0; 
-	if(curr == NULL){
-       return;
-    }
-    getAllDescending(curr->right, index);   
-    tempArr[index++] = curr->getData();  
-    getAllDescending(curr->left, index);
+    if (curr == nullptr)
+        return this->getAllDescending(arr, i, this->root);
+    else if (!this->root)
+        throw "The tree is empty";
+
+    if (curr->left)
+        getAllDescending(arr, i, curr->left);
+
+    arr[i++] = curr->getData();
+
+    if (curr->right)
+        getAllDescending(arr, i, curr->right);
 }
 
 

@@ -16,7 +16,7 @@ struct Book {
 
 int main(void) {	
 
-	Treey<string, int>* wordTree = new Treey<string, int>();
+	Treey<string, int> wordTree = Treey<string, int>();
 
 	/*
 	need to create the tree, nodes contain string and word count
@@ -55,38 +55,62 @@ int main(void) {
 			word.erase(std::remove(word.begin(), word.end(), c), word.end());
 		}
 		//cout << word << endl;
-		if (wordTree->find(word) == nullptr) {
-			wordTree->insert(word, 1);
+		if (wordTree.find(word) == nullptr) {
+			
+
+			wordTree.insert(word, 1);
 		}
 		else {
-			
+			(*wordTree.find(word))++;
 		}
 		strContents.push_back(word);
 		Fstrstr >> word;
 	}
 
-	int x = 3;
+	std::string buff;
+	int choice;
 	do
 	{
-		cout << "hi" << endl;
-		x--;
+		cout << "Choose an option from below:" << endl;
+		cout << "[1] Search for a node" << endl;
+		cout << "[2] Get all ascending" << endl;
+		cout << "[3] Get all descending" << endl;
+		cout << "[4] Exit" << endl;
+		
+		cin >> choice;
+		int* arr = new int[wordTree.numNodes()];
+		int j = 0;
+		int* a = nullptr;
+		switch (choice)
+		{
+		case 1:
+			cout << "Enter a word" << endl;
+			cin >> buff;
+			a = wordTree.find(buff);
+			if (!a)
+				cout << "Word does not exist" << endl;
+			else
+				cout << *a << endl;
+			break;
+		case 2:
+			wordTree.getAllAscending(arr, j, nullptr);
+			for (int i = 0; i < wordTree.numNodes(); i++)
+				cout << arr[i] << " ";
+			cout << endl;
 
-	} while (x > 0);
+			break;
+		case 3:
+			wordTree.getAllDescending(arr, j, nullptr);
+			for (int i = 0; i < wordTree.numNodes(); i++)
+				cout << arr[i] << " ";
+			cout << endl;
+
+			break;
+		default:
+			break;
+		}
+
+	} while (choice != 4);
 	
-
-	//wordFstrstr >> line;
-	//while (wordFstrstr) {
-	//	//b.wordCount++;
-	//	
-	//	if (find(wordFstrstr, wordFstrstr) == nullptr) {
-	//		insert(wordFstrstr);
-
-	//	} else {
-	//		find(wordFstrstr)->freq++;
-	//	}
-
-	//	wordFstrstr >> line;
-	//}
-
 	return 0;
 }

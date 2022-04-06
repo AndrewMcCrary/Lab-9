@@ -147,7 +147,10 @@
     <ClInclude Include="Treey.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="mobydick.txt" />
+    <Text Include="mb.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

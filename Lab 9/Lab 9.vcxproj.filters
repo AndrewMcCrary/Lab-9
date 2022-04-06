@@ -31,8 +31,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="mobydick.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <Text Include="mb.txt" />
   </ItemGroup>
 </Project>
