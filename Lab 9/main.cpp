@@ -5,6 +5,14 @@
 #include <algorithm>
 #include "Treey.h"
 
+/// Andrew McCrary
+///	Richard Roberts
+///	Vitta Silberberg
+/// 
+/// All contributions are equal.
+///
+
+
 using namespace std;
 
 struct Book {
