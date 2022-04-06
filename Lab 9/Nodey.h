@@ -47,7 +47,7 @@ public:
 	/// Gets a pointer to the nodes data.
 	/// </summary>
 	/// <returns>The data pointer.</returns>
-	T2 getDataAddr() { return &(this->data); }
+	T2* getDataAddr() { return &(this->data); }
 
 	/// <summary>
 	/// Sets the nodes data.
