@@ -87,7 +87,7 @@ public:
 	/// </summary>
 	int numNodes(Nodey<T1, T2>* curr = nullptr);
 
-	void getAllAscending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[]);
+	void getAllAscending(T2* arr, int& i = 0, Nodey<T1, T2>* curr = nullptr);
 	void getAllDescending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[]);
 
 	/// <summary>
@@ -128,7 +128,7 @@ inline void Treey<T1, T2>::insert(T1 key, T2 data)
 {
     Nodey<T1, T2>* current = this->root;
     if (!current) {
-        this->root = new Nodey<T1, T2>(key);
+        this->root = new Nodey<T1, T2>(key, data);
         return;
     }
 
@@ -195,7 +195,8 @@ inline T2 Treey<T1, T2>::remove(T1 key, Nodey<T1, T2>* root, Nodey<T1, T2>* pare
             min->parent->left = min->right;
         }
 
-        // TODO: Rebalance here
+        this->updateBalanceFactors(this->root);
+        this->balanceTree(this->root, nullptr);
 
         return data;
     }
@@ -249,23 +250,38 @@ inline T2* Treey<T1, T2>::find(T1 key, Nodey<T1, T2>* root)
 template<class T1, class T2>
 inline int Treey<T1, T2>::numNodes(Nodey<T1, T2>* root)
 {
-	if (!root)
-		return 0;
+    if (!this->root)
+        return 0;
 
-    return 1 + numNodes(root->left) + numNodes(root->right);
+    if (!root)
+        return this->numNodes(this->root);
+
+    int i = 0;
+    if (root->left)
+        i += numNodes(root->left);
+
+    if (root->right)
+        i += numNodes(root->right);
+
+    return 1 + i;
 }
 
 
 template<class T1, class T2>
-inline void Treey<T1, T2>::getAllAscending(Nodey<T1, T2>* curr, Nodey<T1, T2>* tempArr[])
+inline void Treey<T1, T2>::getAllAscending(T2* arr, int& i, Nodey<T1, T2>* curr)
 {
-    static int index = 0; 
-	if(curr == NULL){
-       return;
-    }
-    getAllAscending(curr->left, index);   
-    tempArr[index++] = curr->getData();  
-    getAllAscending(curr->right, index);
+    if (curr == nullptr)
+        return this->getAllAscending(arr, i, this->root);
+    else if (!this->root)
+        throw "The tree is empty";
+
+    if (curr->left)
+        getAllAscending(arr, i, curr->left);
+
+    arr[i++] = curr->getData();
+
+    if (curr->right)
+        getAllAscending(arr, i, curr->right);
 }
 
 
